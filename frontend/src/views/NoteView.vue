@@ -9,7 +9,7 @@ const sortBy = ref("date-desc");
 const loading = ref(true);
 
 const showModal = ref(false);
-const modalMode = ref("create"); 
+const modalMode = ref("create");
 const selectedNote = ref(null);
 
 onMounted(loadNotes)
@@ -24,6 +24,12 @@ function openEdit(note) {
   modalMode.value = "edit";
   selectedNote.value = note;
   showModal.value = true;
+}
+
+function resetFilters() {
+  search.value = "";
+  sortBy.value = "date-desc"; // or default you want
+  loadNotes();                // reload after reset
 }
 
 async function deleteNote(note) {
@@ -95,9 +101,13 @@ function formatDate(dateStr) {
         <div class="join-item mx-2">
           <button class="btn btn-info text-white" @click="loadNotes">Search</button>
         </div>
+                <button class="btn btn-warning text-white mx-2" @click="resetFilters">
+          Reset
+        </button>
         <button class="btn btn-success text-white" @click="openCreate">
           New Note
         </button>
+
       </div>
     </div>
 
