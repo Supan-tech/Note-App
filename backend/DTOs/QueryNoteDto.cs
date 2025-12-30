@@ -8,8 +8,7 @@ namespace Backend.DTOs
         public string? Search { get; set; }
 
         //Sorting
-        public string? SortBy { get; set; }   
-        public string? SortDir { get; set; }   
+        public string? SortBy { get; set; }    
 
         //filter
         public DateTime? CreatedFrom { get; set; }

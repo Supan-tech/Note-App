@@ -4,18 +4,15 @@ import api from "../api.js";
 import NoteModal from "../components/NoteModal.vue";
 
 const items = ref([]);
+const search = ref("");
+const sortBy = ref("date-desc");
 const loading = ref(true);
 
 const showModal = ref(false);
 const modalMode = ref("create"); 
 const selectedNote = ref(null);
 
-onMounted(async () => {
-  const res = await api.get("/note/all");
-  items.value = res.data.data;
-  loading.value = false;
-});
-
+onMounted(loadNotes)
 
 function openCreate() {
   modalMode.value = "create";
@@ -32,10 +29,20 @@ function openEdit(note) {
 async function deleteNote(note) {
   await api.delete(`/note/${note.uid}`);
 
-  const res = await api.get("/note/all");
-  items.value = res.data.data;
+  await loadNotes();
 }
 
+async function loadNotes() {
+  loading.value = true;
+  const res = await api.get("/note/all", {
+    params: {
+      search: search.value,
+      sortBy: sortBy.value,
+    }
+  });
+  items.value = res.data.data;
+  loading.value = false;
+}
 
 async function saveNote(note) {
   if (modalMode.value === "create") {
@@ -52,10 +59,8 @@ async function saveNote(note) {
     });
 
   }
-
   // Reload notes
-  const res = await api.get("/note/all");
-  items.value = res.data.data;
+  await loadNotes();
 }
 function formatDate(dateStr) {
   if (!dateStr) return "None";
@@ -76,7 +81,7 @@ function formatDate(dateStr) {
 
     <div class="py-8 flex flex-col gap-3 mb-6">
       <div class="join">
-        <select class="select join-item mx-2">
+        <select class="select join-item mx-2" v-model="sortBy" @change="loadNotes">
           <option disabled selected>Sort</option>
           <option value="title-asc">Title ↑</option>
           <option value="title-desc">Title ↓</option>
@@ -85,10 +90,10 @@ function formatDate(dateStr) {
         </select>
 
         <div class="join-item mx-2">
-          <input class="input" placeholder="Search" />
+          <input class="input" placeholder="Search By Title" v-model="search" @keyup.enter="loadNotes" />
         </div>
         <div class="join-item mx-2">
-          <button class="btn btn-info text-white">Search</button>
+          <button class="btn btn-info text-white" @click="loadNotes">Search</button>
         </div>
         <button class="btn btn-success text-white" @click="openCreate">
           New Note

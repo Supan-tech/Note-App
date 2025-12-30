@@ -39,22 +39,17 @@ namespace Backend.Service
 
             notes = query.SortBy?.ToLower() switch
             {
-                "createddate" => query.SortDir == "asc"
-                    ? notes.OrderBy(n => n.CreatedDate)
-                    : notes.OrderByDescending(n => n.CreatedDate),
+                "date-desc" => notes.OrderByDescending(n => n.CreatedDate),
 
-                "updateddate" => query.SortDir == "asc"
-                    ? notes.OrderBy(n => n.UpdatedDate)
-                    : notes.OrderByDescending(n => n.UpdatedDate),
+                "date-asc" =>  notes.OrderBy(n => n.CreatedDate),
 
-                "title" => query.SortDir == "asc"
-                    ? notes.OrderBy(n => n.Title)
-                    : notes.OrderByDescending(n => n.Title),
+                "title-asc" =>  notes.OrderBy(n => n.Title),
+                "title-desc" =>  notes.OrderByDescending(n => n.Title),
 
-                _ => notes.OrderByDescending(n => n.CreatedDate) // default
+                _ => notes.OrderByDescending(n => n.CreatedDate) 
             };
 
-            var total = await notes.CountAsync();
+            // var total = await notes.CountAsync();
 
             //Couldn't implement pagination in time
             // notes = notes
