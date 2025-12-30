@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5001/api", // change to your API domain
+  baseURL: "http://localhost:5001/api", 
 });
 
-// Attach bearer token automatically to every request
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token"); // or cookie, pinia, vuex
+  const token = localStorage.getItem("access_token"); 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

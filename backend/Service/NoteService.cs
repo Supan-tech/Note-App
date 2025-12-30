@@ -98,7 +98,6 @@ namespace Backend.Service
             }
         }
 
-
         public async Task<Note> UpdateAsync(int userId, int uid, CreateNoteDto newNote)
         {
             var note = await _context.Notes.FindAsync(uid);
